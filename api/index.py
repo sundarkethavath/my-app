@@ -4,10 +4,15 @@ from urllib.parse import parse_qs
 from http.server import BaseHTTPRequestHandler
 from CORS import enable_cors
 
-# Load the student marks data from the file
+# Load the student data from the file
 def load_student_data():
-    with open(os.path.join(os.path.dirname(__file__), 'data/students.json')) as f:
-        return json.load(f)
+    try:
+        with open(os.path.join(os.path.dirname(__file__), 'data/students.json')) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise Exception("students.json file not found")
+    except json.JSONDecodeError:
+        raise Exception("Error decoding students.json")
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
